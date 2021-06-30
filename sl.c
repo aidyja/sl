@@ -112,6 +112,11 @@ int returnAsciiArtCount(const char *path)
 
 int main(int argc, char *argv[])
 {
+    if( argc != 1 && argc != 3 ) {
+        printf("Bad Parameter\n");
+        exit(1);
+    }
+
     int x, i;
     int artNum = 0;
     const char* path = "/usr/share/ascii_art/";
@@ -121,11 +126,14 @@ int main(int argc, char *argv[])
         printf("No Ascii Art Found\n");
         return 0;
     }
-    printf("total_art: %d", total_art);
 
     if( argc == 3 ) {
-        if (*argv[1] == "-n") {
+        if (strcmp(argv[1], "-n") == 0 ) {
             artNum = atoi(argv[2])% total_art;
+        }
+        else {
+            printf("Bad Parameter\n");
+            exit(1);
         }
     }
 
