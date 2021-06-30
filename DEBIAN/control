@@ -1,0 +1,7 @@
+Name: sl 
+Package: sl 
+Section: sl 
+Version: 4.0 
+Description: Typo of ls 
+Architecture: all
+Maintainer: Deepti Joshi
