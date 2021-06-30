@@ -64,7 +64,7 @@ int my_mvaddstr(int y, int x, char *str)
     return OK;
 }
 
-void returnFileName(const char *path, int count, char* fileName)
+void returnNthAsciiFileName(const char *path, int count, char* fileName)
 {
     struct dirent *dp;
     DIR *dir = opendir(path);
@@ -79,7 +79,8 @@ void returnFileName(const char *path, int count, char* fileName)
         if( dp->d_name[0] == '@' )
             index++;
         if( index == count ) {
-            strcpy(fileName,dp->d_name);
+            strcpy(fileName,path);
+            strcpy(fileName+strlen(path), dp->d_name);
             break;
         }
     }
@@ -88,7 +89,7 @@ void returnFileName(const char *path, int count, char* fileName)
     closedir(dir);
 }
 
-int returnArtCount(const char *path)
+int returnAsciiArtCount(const char *path)
 {
     struct dirent *dp;
     DIR *dir = opendir(path);
@@ -113,10 +114,11 @@ int main(int argc, char *argv[])
 {
     int x, i;
     int artNum = 0;
-    //const char* path = "/usr/share/ascii_art";
-    const char* path = "./usr/share/ascii_art";
-    int total_art = returnArtCount(path);
+    const char* path = "/usr/share/ascii_art/";
+
+    int total_art = returnAsciiArtCount(path);
     if( total_art == 0 ) {
+        printf("No Ascii Art Found\n");
         return 0;
     }
     printf("total_art: %d", total_art);
@@ -140,23 +142,23 @@ int main(int argc, char *argv[])
     leaveok(stdscr, TRUE);
     scrollok(stdscr, FALSE);
 
-    char fileName[25];
-    returnFileName(path, artNum, fileName);
-    buffer = (char **)malloc(LINES * sizeof(char *));
-    for (int i=0; i<LINES; i++)
-         buffer[i] = (char *)malloc(COLS * sizeof(char));
+    char fileName[50];
+    returnNthAsciiFileName(path, artNum, fileName);
 
     FILE * fp;
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
     size_t lCount = 0;
-
     fp = fopen(fileName, "r");
     if (fp == NULL) {
         printf("File not found\n");
         return 1;
     }
+
+    buffer = (char **)malloc(LINES * sizeof(char *));
+    for (int i=0; i<LINES; i++)
+         buffer[i] = (char *)malloc(COLS * sizeof(char));
 
     //Assumption that animation always fits in the screen
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -169,9 +171,6 @@ int main(int argc, char *argv[])
     MAX_ROW = lCount;
 
     fclose(fp);
-    /*if (line)
-        free(line);*/
-
 
     for (x = COLS - 1; ; --x) {
         if (add_art(x) == ERR) break;
