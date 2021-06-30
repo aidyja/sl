@@ -18,6 +18,9 @@ sl: sl.c
 	cp sl ./usr/bin/sl
 	cp @*.txt ./usr/share/ascii_art
 
+deb: sl
+	cd ..; dpkg-deb --build sl ; sudo dpkg -i sl.deb ; cp sl.deb sl/
+
 clean:
 	rm -f sl
 	rm -f ./usr/bin/sl
