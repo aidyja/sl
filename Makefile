@@ -13,6 +13,8 @@ all: sl
 
 sl: sl.c 
 	$(CC) $(CFLAGS) -o sl sl.c -lncurses
+	mkdir -p usr/bin
+	mkdir -p usr/share/ascii_art
 	cp sl ./usr/bin/sl
 	cp @*.txt ./usr/share/ascii_art
 
